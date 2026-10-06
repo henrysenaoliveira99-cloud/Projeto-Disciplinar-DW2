@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FATEC Eventos{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topo">
+    <div class="container nav">
+        <a class="logo" href="{{ url_for('eventos.index') }}">FATEC <span>Eventos</span></a>
+
+        <nav>
+            <a href="{{ url_for('eventos.index') }}">Eventos</a>
+
+            {% if usuario_logado %}
+                <a href="{{ url_for('eventos.novo') }}">Cadastrar evento</a>
+            {% endif %}
+
+            {% if usuario_logado %}
+                <span class="usuario">Olá, {{ usuario_logado.nome }}</span>
+                <a class="btn btn-outline" href="{{ url_for('auth.logout') }}">Sair</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Entrar</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                <div class="mensagens">
+                    {% for categoria, mensagem in mensagens %}
+                        <div class="alert {{ categoria }}">{{ mensagem }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+<footer>
+    <p>FATEC — Sistema de Gestão de Eventos Acadêmicos | Desenvolvimento Web II</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
